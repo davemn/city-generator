@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{99DE6027-63D5-CFC2-C441-7922D797CFD9}") = "CityGenerator", "Assembly-CSharp-firstpass.csproj", "{2F38B02A-5BB7-169D-FAB4-F6C5FC784E7C}"
+EndProject
+Project("{99DE6027-63D5-CFC2-C441-7922D797CFD9}") = "CityGenerator", "Assembly-UnityScript.unityproj", "{ABFD35B2-1687-9625-94DA-54301F080681}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2F38B02A-5BB7-169D-FAB4-F6C5FC784E7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F38B02A-5BB7-169D-FAB4-F6C5FC784E7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F38B02A-5BB7-169D-FAB4-F6C5FC784E7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F38B02A-5BB7-169D-FAB4-F6C5FC784E7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABFD35B2-1687-9625-94DA-54301F080681}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABFD35B2-1687-9625-94DA-54301F080681}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABFD35B2-1687-9625-94DA-54301F080681}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABFD35B2-1687-9625-94DA-54301F080681}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal

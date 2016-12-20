@@ -41,7 +41,7 @@ function Start () {
 				//get values from heightmap array
 				var hm = heightmap.GetPixel(j,i).grayscale;
 				//get building height for block
-				var h = mapToRange(hm, city.build_min_h, city.build_max_h, city.build_exp);
+				var h = MapToRange(hm, city.build_min_h, city.build_max_h, city.build_exp);
 				//max possible distance from center of block
 				var w = city.block-city.road_w;
 				//with inner block margins

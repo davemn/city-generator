@@ -46,7 +46,6 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Plugins\CityConfig.cs" />
-     <Compile Include="Assets\Plugins\IMeshGenerator.cs" />
      <Compile Include="Assets\Plugins\MyColors.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

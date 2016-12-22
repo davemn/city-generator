@@ -1,4 +1,6 @@
-﻿public static class MyColors {
+﻿using UnityEngine;
+
+public class MyColors {
 	public static int BUILDING = 0xE8E8E8;
 	public static int GROUND = 0x81A377;
 	public static int TREE = 0x216E41;
@@ -10,4 +12,9 @@
 	public static int WATER = 0x4B95DE;
 	public static int TRAIN = 0x444444;
 	public static int CARS = 0xCC4E4E;
+
+	public static bool ColorsEqual (Color a, Color b) {
+		float err = Mathf.Abs(a.r - b.r) + Mathf.Abs(a.g - b.g) + Mathf.Abs(a.b - b.b);
+		return err < 0.001f;
+	}
 }

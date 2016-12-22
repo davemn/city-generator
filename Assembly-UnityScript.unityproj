@@ -46,9 +46,11 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Building.js" />
+     <Compile Include="Assets\BuildingOpts.js" />
      <Compile Include="Assets\GenerateBlocks.js" />
      <Compile Include="Assets\GenerateGround.js" />
      <Compile Include="Assets\MeshGenerator.js" />
+     <Compile Include="Assets\MeshOpts.js" />
      <Compile Include="Assets\PointAtOrigin.js" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

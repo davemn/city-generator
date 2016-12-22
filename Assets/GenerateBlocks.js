@@ -1,55 +1,38 @@
 ﻿#pragma strict
 
+import System.Collections.Generic;
+
 private var city: CityConfig;
 var meshgen: MeshGenerator;
 var watermap: Texture2D;
 var heightmap: Texture2D;
 
-function ColorsEqual (a: Color, b: Color) {
-	var err: float = Mathf.Abs(a.r - b.r) + Mathf.Abs(a.g - b.g) + Mathf.Abs(a.b - b.b);
-	return err < 0.001f;
-}
-
-//map val (0-1) to a range with optional weight (default 1.0)
-function MapToRange(val: float, min: float, max: float){
-	return this.MapToRange(val, min, max, 1.0f);
-}
-
-//map val (0-1) to a range with optional weight (default 1.0)
-function MapToRange(val: float, min: float, max: float, exp: float){
-	var weighted = Mathf.Pow(val, exp);
-	//make the highest little higher
-	if (val >= 0.9f) 
-		weighted = val;
-	var num = Mathf.Floor(weighted * (max - min)) + min;
-	return num;
-}
-
 //recursively create buildings return array of meshes
 function SetupBuildings(x, z, w, l, h, sub, color){
 	// var street_meshes = new List.<GameObject>();
-	SetupBuildings(x,z,w,l,h,sub,color, new List.<GameObject.();
+	SetupBuildings(x,z,w,l,h,sub,color, new List.<GameObject>());
 }
 
 function SetupBuildings(x, z, w, l, h, sub, color, buildings){
 	var offset, half, between;
-	//array of buildings for this block
-	buildings = buildings || [];
-	var depth = Math.pow(2, city.subdiv);
-	var tall = Math.round((h/city.build_max_h)*100) > 90;
+	var depth = Mathf.Pow(2, city.subdiv);
+	var tall = Mathf.Round((h/city.build_max_h)*100) > 90;
 	var slice_deviation = 15;
 	//really tall buildings take the whole block
+	var building: Building;
 	if(sub<1 || tall){
-		building = new Building({
-			h: getRandInt(h-city.block_h_dev, h+city.block_h_dev),
-			w: w, 
-			l: l,
-			x: x,
-			z: z,
-			tall:tall,
-			color: color
-		});
-		buildings.push(building.group);
+		var buildingOpts: BuildingOpts = new BuildingOpts();
+		buildingOpts.h = NumberRange.GetRandInt(h-city.block_h_dev, h+city.block_h_dev);
+		buildingOpts.w = w;
+		buildingOpt.l = l;
+		buildingOpts.x = x;
+		buildingOpts.z = z;
+		buildingOpts.tall = tall;
+		buildingOpt.color = color;
+
+		building = new Building(buildingOpts);
+
+		buildings.Add(building.group);
 		//add all buildings in this block to scene as a single mesh
 		if(buildings.length >= depth || tall){
 			scene.add(mergeMeshes(buildings));
@@ -60,7 +43,7 @@ function SetupBuildings(x, z, w, l, h, sub, color, buildings){
 		//TODO: simplify this
 		var dir = (w==l) ? chance(50) : w>l;
 		if(dir){
-			offset = Math.abs(getRandInt(0, slice_deviation));
+			offset = Math.abs(NumberRange.GetRandInt(0, slice_deviation));
 			between = (city.inner_block_margin/2);
 			half = w/2;
 			var x_prime = x + offset; 
@@ -68,11 +51,11 @@ function SetupBuildings(x, z, w, l, h, sub, color, buildings){
 			var w2 = Math.abs((x-half)-x_prime) - between;
 			var x1 = x_prime + (w1/2) + between;
 			var x2 = x_prime - (w2/2) - between;
-			setupBuildings(x1, z, w1, l, h, sub-1, color, buildings);
-			setupBuildings(x2, z, w2, l, h, sub-1, color, buildings);
+			SetupBuildings(x1, z, w1, l, h, sub-1, color, buildings);
+			SetupBuildings(x2, z, w2, l, h, sub-1, color, buildings);
 		}
 		else{
-			offset = Math.abs(getRandInt(0, slice_deviation));
+			offset = Math.abs(NumberRange.GetRandInt(0, slice_deviation));
 			between = (city.inner_block_margin/2);
 			half = l/2;
 			var z_prime = z + offset; 
@@ -80,8 +63,8 @@ function SetupBuildings(x, z, w, l, h, sub, color, buildings){
 			var l2 = Math.abs((z-half)-z_prime) - between;
 			var z1 = z_prime + (l1/2) + between;
 			var z2 = z_prime - (l2/2) - between;
-			setupBuildings(x, z1, w, l1, h, sub-1, color, buildings);
-			setupBuildings(x, z2, w, l2, h, sub-1, color, buildings);
+			SetupBuildings(x, z1, w, l1, h, sub-1, color, buildings);
+			SetupBuildings(x, z2, w, l2, h, sub-1, color, buildings);
 		}
 	}
 }
@@ -96,13 +79,13 @@ function Start () {
 
 	for (var i = 0; i < city.blocks_x; i++) {
 		for (var j = 0; j < city.blocks_z; j++) {
-			if(this.ColorsEqual (watermap.GetPixel(j,i), Color.white)) {
+			if(MyColors.ColorsEqual (watermap.GetPixel(j,i), Color.white)) {
 				var x = ((city.block*i) + city.block/2) - city.width/2;
 				var z = ((city.block*j) + city.block/2) - city.length/2;
 				//get values from heightmap array
 				var hm = heightmap.GetPixel(j,i).grayscale;
 				//get building height for block
-				var h = MapToRange(hm, city.build_min_h, city.build_max_h, city.build_exp);
+				var h = NumberRange.MapToRange(hm, city.build_min_h, city.build_max_h, city.build_exp);
 				//max possible distance from center of block
 				var w = city.block-city.road_w;
 				//with inner block margins
@@ -117,7 +100,7 @@ function Start () {
 				if(hm > city.tree_threshold) {
 					// var building_color = DEBUG ? getGreyscaleColor(hm) : colors.BUILDING;
 					var building_color = MyColors.BUILDING;
-					setupBuildings(x, z, inner, inner,  h, city.subdiv, building_color);
+					SetupBuildings(x, z, inner, inner,  h, city.subdiv, building_color);
 				}
 				/* TODO
 				//create tree meshes

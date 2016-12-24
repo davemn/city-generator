@@ -9,10 +9,25 @@ public class Building
 	// TODO move getBoxMeshOpts somewhere to be shared with setupBridges
 
 	//create a box mesh with a geometry and material
-	private function getBoxMeshOpts(options: MeshOpts) {
+	private function GetBoxMeshOpts(options: MeshOpts) {
 		var o=options;
 		return meshgen.getBoxMesh(o.color, o.w, o.h, o.l, o.x, o.y, o.z, o.shadow);
 	}
+	
+	// TODO move random util funcs into static class
+	
+	//returns true percent of the time
+	private function Chance(percent: float) {
+		return Random.value < (percent/100.0f);
+	}
+	
+	//return 1 or -1
+	private function RandDir(){
+		return Mathf.Round(Random.value) * 2 - 1;
+	}
+	
+	private var parts: List.<GameObject>();
+	private var group: GameObject;
 
 	public function Building(opts: BuildingOpts) {
 		this.parts = new List.<GameObject>();
@@ -37,63 +52,68 @@ public class Building
 		core_opts.shadow = true;
 
 		//building core
-		this.parts.Add(getBoxMeshOpts(core_opts));
+		this.parts.Add(GetBoxMeshOpts(core_opts));
 		//draw rim on top of some buildings
-		if(chance(50)){
-			// TODO replace _.assign calls with direct override of `rim_opts` fields
-			this.parts.Add(getBoxMeshOpts(_.assign(rim_opts, {
-				w: opts.w,
-				l: inset,
-				x: opts.x,
-				z: opts.z - (opts.l/2 - inset/2)
-			})));
-			this.parts.Add(getBoxMeshOpts(_.assign(rim_opts, {
-				w: opts.w,
-				l: inset,
-				x: opts.x,
-				z: opts.z + (opts.l/2 - inset/2)
-			})));
-			this.parts.Add(getBoxMeshOpts(_.assign(rim_opts, {
-				w: inset,
-				l: opts.l-(inset*2),
-				x: opts.x - (opts.w/2 - inset/2),
-				z: opts.z
-			})));
-			this.parts.Add(getBoxMeshOpts(_.assign(rim_opts, {
-				w: inset,
-				l: opts.l-(inset*2),
-				x: opts.x + (opts.w/2 - inset/2),
-				z: opts.z
-			})));		
+		if(Chance(50)){
+			rim_opts.w = opts.w;
+			rim_opts.l = inset;
+			rim_opts.x = opts.x;
+			rim_opts.z = opts.z - (opts.l/2 - inset/2);
+			
+			this.parts.Add(GetBoxMeshOpts(rim_opts));
+			
+			rim_opts.w = opts.w;
+			rim_opts.l = inset;
+			rim_opts.x = opts.x;
+			rim_opts.z = opts.z + (opts.l/2 - inset/2);
+			
+			this.parts.Add(GetBoxMeshOpts(rim_opts));
+			
+			rim_opts.w = inset;
+			rim_opts.l = opts.l-(inset*2);
+			rim_opts.x = opts.x - (opts.w/2 - inset/2);
+			rim_opts.z = opts.z;
+			
+			this.parts.Add(GetBoxMeshOpts(rim_opts));
+			
+			rim_opts.w = inset;
+			rim_opts.l = opts.l-(inset*2);
+			rim_opts.x = opts.x - (opts.w/2 - inset/2);
+			rim_opts.z = opts.z;			
+			
+			this.parts.Add(GetBoxMeshOpts(rim_opts));
 		}
 		//additional details
-		if(chance(50)){
-			this.parts.Add(getBoxMeshOpts(_.assign(rim_opts, {
-				w: NumberRange.GetRandInt(opts.w/4, opts.w/2),
-				l: NumberRange.GetRandInt(opts.l/4, opts.l/2),
-				x: opts.x - (5*randDir()),
-				z: opts.z - (5*randDir())
-			})));
+		if(Chance(50)){
+			rim_opts.w = NumberRange.GetRandInt(opts.w/4, opts.w/2);
+			rim_opts.l = NumberRange.GetRandInt(opts.l/4, opts.l/2);
+			rim_opts.x = opts.x - (5*RandDir());
+			rim_opts.z = opts.z - (5*RandDir());
+		
+			this.parts.Add(GetBoxMeshOpts(rim_opts));
 		}
 		//antenna only on tall buildings
-		if(chance(25) && opts.tall){
-			this.parts.Add(getBoxMeshOpts(_.assign(rim_opts, {
-				w: 3,
-				l: 3,
-				x: opts.x - (5*randDir()),
-				z: opts.z - (5*randDir()),
-				h: NumberRange.GetRandInt(city.build_max_h/5, city.build_max_h/3)
-			})));
+		if(Chance(25) && opts.tall){
+			rim_opts.w = 3;
+			rim_opts.l = 3;
+			rim_opts.x = opts.x - (5*RandDir());
+			rim_opts.z = opts.z - (5*RandDir());
+			rim_opts.h = NumberRange.GetRandInt(city.build_max_h/5, city.build_max_h/3);
+		
+			this.parts.Add(GetBoxMeshOpts(rim_opts));
 		}
 		if(chance(25) && opts.tall){
-			var top = getBoxMeshOpts(_.assign(rim_opts, {
-				w: opts.w - (opts.w/3),
-				l: opts.w - (opts.w/3),
-				x: opts.x,
-				z: opts.z,
-				h: NumberRange.GetRandInt(15, 30)
-			}));
-			top.castShadow = false;
+			rim_opts.w = opts.w - (opts.w/3);
+			rim_opts.l = opts.w - (opts.w/3);
+			rim_opts.x = opts.x;
+			rim_opts.z = opts.z;
+			rim_opts.h = NumberRange.GetRandInt(15, 30);
+		
+			var top: GameObject = GetBoxMeshOpts(rim_opts);
+			
+			var topRend: MeshRenderer = top.GetComponent.<MeshRenderer>();
+			topRend.shadowCastingMode = Rendering.ShadowCastingMode.Off;
+			
 			this.parts.Add(top);
 		}
 		//merged mesh

@@ -2,7 +2,7 @@
 
 public class MeshOpts
 {
-	var color: Color;
+	var color: int;
 	var w: float;
 	var h: float;
 	var l: float;
@@ -10,4 +10,4 @@ public class MeshOpts
 	var y: float;
 	var z: float;
 	var shadow: boolean;
-{
+}

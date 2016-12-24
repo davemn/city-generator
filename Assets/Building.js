@@ -26,10 +26,13 @@ public class Building
 		return Mathf.Round(Random.value) * 2 - 1;
 	}
 	
-	private var parts: List.<GameObject>();
+	private var city: CityConfig;
+	private var parts: List.<GameObject>;
 	private var group: GameObject;
 
 	public function Building(opts: BuildingOpts) {
+		this.city = new CityConfig();
+	
 		this.parts = new List.<GameObject>();
 		//50% chance of building having a rim.
 		var rim = NumberRange.GetRandInt(3,5);
@@ -41,7 +44,7 @@ public class Building
 		rim_opts.y = opts.h + (rim/2) + city.curb_h;
 		rim_opts.shadow = false;
 
-		var core_opts = new MeshOpts;
+		var core_opts = new MeshOpts();
 		core_opts.color = opts.color;
 		core_opts.w = opts.w;
 		core_opts.h = opts.h;
@@ -102,7 +105,7 @@ public class Building
 		
 			this.parts.Add(GetBoxMeshOpts(rim_opts));
 		}
-		if(chance(25) && opts.tall){
+		if(Chance(25) && opts.tall){
 			rim_opts.w = opts.w - (opts.w/3);
 			rim_opts.l = opts.w - (opts.w/3);
 			rim_opts.x = opts.x;

@@ -8,5 +8,5 @@ public class BuildingOpts
 	var x: float;
 	var z: float;
 	var tall: boolean;
-	var color: Color;
-{
+	var color: int;
+}

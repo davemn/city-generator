@@ -14,7 +14,10 @@ function SetupBuildings(x, z, w, l, h, sub, color){
 }
 
 function SetupBuildings(x, z, w, l, h, sub, color, buildings){
-	var offset, half, between;
+	var offset;
+	var half;
+	var between;
+	
 	var depth = Mathf.Pow(2, city.subdiv);
 	var tall = Mathf.Round((h/city.build_max_h)*100) > 90;
 	var slice_deviation = 15;

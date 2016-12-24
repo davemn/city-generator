@@ -7,63 +7,70 @@ var meshgen: MeshGenerator;
 var watermap: Texture2D;
 var heightmap: Texture2D;
 
+//returns true percent of the time
+private function Chance(percent: float) {
+	return Random.value < (percent/100.0f);
+}
+
 //recursively create buildings return array of meshes
-function SetupBuildings(x, z, w, l, h, sub, color){
+function SetupBuildings(x: float, z: float, w: float, l: float, h: float, sub: float, color: int){
 	// var street_meshes = new List.<GameObject>();
 	SetupBuildings(x,z,w,l,h,sub,color, new List.<GameObject>());
 }
 
-function SetupBuildings(x, z, w, l, h, sub, color, buildings){
-	var offset;
-	var half;
-	var between;
+function SetupBuildings(x: float, z: float, w: float, l: float, h: float, sub: float, color: int, buildings: List.<GameObject>){
+	var offset: float;
+	var half: float;
+	var between: float;
 	
 	var depth = Mathf.Pow(2, city.subdiv);
 	var tall = Mathf.Round((h/city.build_max_h)*100) > 90;
 	var slice_deviation = 15;
+	
 	//really tall buildings take the whole block
 	var building: Building;
 	if(sub<1 || tall){
 		var buildingOpts: BuildingOpts = new BuildingOpts();
 		buildingOpts.h = NumberRange.GetRandInt(h-city.block_h_dev, h+city.block_h_dev);
 		buildingOpts.w = w;
-		buildingOpt.l = l;
+		buildingOpts.l = l;
 		buildingOpts.x = x;
 		buildingOpts.z = z;
 		buildingOpts.tall = tall;
-		buildingOpt.color = color;
+		buildingOpts.color = color;
 
 		building = new Building(buildingOpts);
 
 		buildings.Add(building.group);
 		//add all buildings in this block to scene as a single mesh
-		if(buildings.length >= depth || tall){
-			scene.add(mergeMeshes(buildings));
+		if(buildings.Count >= depth || tall){
+			var buildingGO: GameObject = meshgen.mergeMeshes(buildings.ToArray());
+			buildingGO.transform.parent = transform;
 		}
 	}
 	else{
 		//recursively slice the block until num of subdivisions met
 		//TODO: simplify this
-		var dir = (w==l) ? chance(50) : w>l;
+		var dir = (w==l) ? Chance(50) : w>l;
 		if(dir){
-			offset = Math.abs(NumberRange.GetRandInt(0, slice_deviation));
+			offset = Mathf.Abs(NumberRange.GetRandInt(0, slice_deviation));
 			between = (city.inner_block_margin/2);
 			half = w/2;
 			var x_prime = x + offset; 
-			var w1 = Math.abs((x+half)-x_prime) - between;
-			var w2 = Math.abs((x-half)-x_prime) - between;
+			var w1 = Mathf.Abs((x+half)-x_prime) - between;
+			var w2 = Mathf.Abs((x-half)-x_prime) - between;
 			var x1 = x_prime + (w1/2) + between;
 			var x2 = x_prime - (w2/2) - between;
 			SetupBuildings(x1, z, w1, l, h, sub-1, color, buildings);
 			SetupBuildings(x2, z, w2, l, h, sub-1, color, buildings);
 		}
 		else{
-			offset = Math.abs(NumberRange.GetRandInt(0, slice_deviation));
+			offset = Mathf.Abs(NumberRange.GetRandInt(0, slice_deviation));
 			between = (city.inner_block_margin/2);
 			half = l/2;
 			var z_prime = z + offset; 
-			var l1 = Math.abs((z+half)-z_prime) - between;
-			var l2 = Math.abs((z-half)-z_prime) - between;
+			var l1 = Mathf.Abs((z+half)-z_prime) - between;
+			var l2 = Mathf.Abs((z-half)-z_prime) - between;
 			var z1 = z_prime + (l1/2) + between;
 			var z2 = z_prime - (l2/2) - between;
 			SetupBuildings(x, z1, w, l1, h, sub-1, color, buildings);

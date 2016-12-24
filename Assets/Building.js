@@ -28,15 +28,15 @@ public class Building
 	
 	private var city: CityConfig;
 	private var parts: List.<GameObject>;
-	private var group: GameObject;
+	var group: GameObject;
 
 	public function Building(opts: BuildingOpts) {
 		this.city = new CityConfig();
 	
 		this.parts = new List.<GameObject>();
 		//50% chance of building having a rim.
-		var rim = NumberRange.GetRandInt(3,5);
-		var inset = NumberRange.GetRandInt(2,4);
+		var rim: float = NumberRange.GetRandInt(3,5);
+		var inset: float = NumberRange.GetRandInt(2,4);
 
 		var rim_opts: MeshOpts = new MeshOpts();
 		rim_opts.color = opts.color;

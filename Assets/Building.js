@@ -14,18 +14,6 @@ public class Building
 		return meshgen.getBoxMesh(o.color, o.w, o.h, o.l, o.x, o.y, o.z, o.shadow);
 	}
 	
-	// TODO move random util funcs into static class
-	
-	//returns true percent of the time
-	private function Chance(percent: float) {
-		return Random.value < (percent/100.0f);
-	}
-	
-	//return 1 or -1
-	private function RandDir(){
-		return Mathf.Round(Random.value) * 2 - 1;
-	}
-	
 	private var city: CityConfig;
 	private var parts: List.<GameObject>;
 	var group: GameObject;
@@ -35,8 +23,8 @@ public class Building
 	
 		this.parts = new List.<GameObject>();
 		//50% chance of building having a rim.
-		var rim: float = NumberRange.GetRandInt(3,5);
-		var inset: float = NumberRange.GetRandInt(2,4);
+		var rim: float = CityGenerator.Random.GetRandInt(3,5);
+		var inset: float = CityGenerator.Random.GetRandInt(2,4);
 
 		var rim_opts: MeshOpts = new MeshOpts();
 		rim_opts.color = opts.color;
@@ -57,7 +45,7 @@ public class Building
 		//building core
 		this.parts.Add(GetBoxMeshOpts(core_opts));
 		//draw rim on top of some buildings
-		if(Chance(50)){
+		if(CityGenerator.Random.Chance(50)){
 			rim_opts.w = opts.w;
 			rim_opts.l = inset;
 			rim_opts.x = opts.x;
@@ -87,30 +75,30 @@ public class Building
 			this.parts.Add(GetBoxMeshOpts(rim_opts));
 		}
 		//additional details
-		if(Chance(50)){
-			rim_opts.w = NumberRange.GetRandInt(opts.w/4, opts.w/2);
-			rim_opts.l = NumberRange.GetRandInt(opts.l/4, opts.l/2);
-			rim_opts.x = opts.x - (5*RandDir());
-			rim_opts.z = opts.z - (5*RandDir());
+		if(CityGenerator.Random.Chance(50)){
+			rim_opts.w = CityGenerator.Random.GetRandInt(opts.w/4, opts.w/2);
+			rim_opts.l = CityGenerator.Random.GetRandInt(opts.l/4, opts.l/2);
+			rim_opts.x = opts.x - (5*CityGenerator.Random.RandDir());
+			rim_opts.z = opts.z - (5*CityGenerator.Random.RandDir());
 		
 			this.parts.Add(GetBoxMeshOpts(rim_opts));
 		}
 		//antenna only on tall buildings
-		if(Chance(25) && opts.tall){
+		if(CityGenerator.Random.Chance(25) && opts.tall){
 			rim_opts.w = 3;
 			rim_opts.l = 3;
-			rim_opts.x = opts.x - (5*RandDir());
-			rim_opts.z = opts.z - (5*RandDir());
-			rim_opts.h = NumberRange.GetRandInt(city.build_max_h/5, city.build_max_h/3);
+			rim_opts.x = opts.x - (5*CityGenerator.Random.RandDir());
+			rim_opts.z = opts.z - (5*CityGenerator.Random.RandDir());
+			rim_opts.h = CityGenerator.Random.GetRandInt(city.build_max_h/5, city.build_max_h/3);
 		
 			this.parts.Add(GetBoxMeshOpts(rim_opts));
 		}
-		if(Chance(25) && opts.tall){
+		if(CityGenerator.Random.Chance(25) && opts.tall){
 			rim_opts.w = opts.w - (opts.w/3);
 			rim_opts.l = opts.w - (opts.w/3);
 			rim_opts.x = opts.x;
 			rim_opts.z = opts.z;
-			rim_opts.h = NumberRange.GetRandInt(15, 30);
+			rim_opts.h = CityGenerator.Random.GetRandInt(15, 30);
 		
 			var top: GameObject = GetBoxMeshOpts(rim_opts);
 			

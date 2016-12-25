@@ -7,11 +7,6 @@ var meshgen: MeshGenerator;
 var watermap: Texture2D;
 var heightmap: Texture2D;
 
-//returns true percent of the time
-private function Chance(percent: float) {
-	return Random.value < (percent/100.0f);
-}
-
 //recursively create buildings return array of meshes
 function SetupBuildings(x: float, z: float, w: float, l: float, h: float, sub: float, color: int){
 	// var street_meshes = new List.<GameObject>();
@@ -31,7 +26,7 @@ function SetupBuildings(x: float, z: float, w: float, l: float, h: float, sub: f
 	var building: Building;
 	if(sub<1 || tall){
 		var buildingOpts: BuildingOpts = new BuildingOpts();
-		buildingOpts.h = NumberRange.GetRandInt(h-city.block_h_dev, h+city.block_h_dev);
+		buildingOpts.h = CityGenerator.Random.GetRandInt(h-city.block_h_dev, h+city.block_h_dev);
 		buildingOpts.w = w;
 		buildingOpts.l = l;
 		buildingOpts.x = x;
@@ -51,9 +46,9 @@ function SetupBuildings(x: float, z: float, w: float, l: float, h: float, sub: f
 	else{
 		//recursively slice the block until num of subdivisions met
 		//TODO: simplify this
-		var dir = (w==l) ? Chance(50) : w>l;
+		var dir = (w==l) ? CityGenerator.Random.Chance(50) : w>l;
 		if(dir){
-			offset = Mathf.Abs(NumberRange.GetRandInt(0, slice_deviation));
+			offset = Mathf.Abs(CityGenerator.Random.GetRandInt(0, slice_deviation));
 			between = (city.inner_block_margin/2);
 			half = w/2;
 			var x_prime = x + offset; 
@@ -65,7 +60,7 @@ function SetupBuildings(x: float, z: float, w: float, l: float, h: float, sub: f
 			SetupBuildings(x2, z, w2, l, h, sub-1, color, buildings);
 		}
 		else{
-			offset = Mathf.Abs(NumberRange.GetRandInt(0, slice_deviation));
+			offset = Mathf.Abs(CityGenerator.Random.GetRandInt(0, slice_deviation));
 			between = (city.inner_block_margin/2);
 			half = l/2;
 			var z_prime = z + offset; 

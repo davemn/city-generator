@@ -4,7 +4,7 @@ import System.Collections.Generic;
 
 public class Building
 {
-	public var meshgen: MeshGenerator;
+	public var group: GameObject;
 
 	// TODO move getBoxMeshOpts somewhere to be shared with setupBridges
 
@@ -15,11 +15,12 @@ public class Building
 	}
 	
 	private var city: CityConfig;
+	private var meshgen: MeshGenerator;
 	private var parts: List.<GameObject>;
-	var group: GameObject;
 
-	public function Building(opts: BuildingOpts) {
+	public function Building(opts: BuildingOpts, meshgen: MeshGenerator) {
 		this.city = new CityConfig();
+		this.meshgen = meshgen;
 	
 		this.parts = new List.<GameObject>();
 		//50% chance of building having a rim.

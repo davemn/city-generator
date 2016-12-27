@@ -34,7 +34,7 @@ function SetupBuildings(x: float, z: float, w: float, l: float, h: float, sub: f
 		buildingOpts.tall = tall;
 		buildingOpts.color = color;
 
-		building = new Building(buildingOpts);
+		building = new Building(buildingOpts, meshgen);
 
 		buildings.Add(building.group);
 		//add all buildings in this block to scene as a single mesh

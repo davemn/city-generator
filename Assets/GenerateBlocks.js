@@ -2,10 +2,30 @@
 
 import System.Collections.Generic;
 
-private var city: CityConfig;
 var meshgen: MeshGenerator;
 var watermap: Texture2D;
 var heightmap: Texture2D;
+
+private var city: CityConfig;
+private var buildingContainer: Transform;
+private var treeContainer: Transform;
+
+/*
+//create park 
+function SetupPark(x, z, w, l){
+	var trees = new List.<GameObject>();
+	for(var i=0; i<getRandInt(0, city.tree_max);i++){
+		var tree_x = getRandInt(x-w/2, x+w/2);
+		var tree_z = getRandInt(z-l/2, z+l/2);
+		trees.push(new Tree(tree_x, tree_z).group);
+	}
+	//merge trees for this block into single mesh
+	if(trees.Count > 0) {
+		var treesMerged: GameObject = meshgen.mergeMeshes(trees.ToArray());
+		treesMerged.transform.parent = treeContainer;
+	}
+}
+*/
 
 //recursively create buildings return array of meshes
 function SetupBuildings(x: float, z: float, w: float, l: float, h: float, sub: float, color: int){
@@ -39,8 +59,9 @@ function SetupBuildings(x: float, z: float, w: float, l: float, h: float, sub: f
 		buildings.Add(building.group);
 		//add all buildings in this block to scene as a single mesh
 		if(buildings.Count >= depth || tall){
-			var buildingGO: GameObject = meshgen.mergeMeshes(buildings.ToArray());
-			buildingGO.transform.parent = transform;
+			var buildingsMerged: GameObject = meshgen.mergeMeshes(buildings.ToArray());
+			// buildingGO.transform.parent = transform;
+			buildingsMerged.transform.parent = buildingContainer;
 		}
 	}
 	else{
@@ -76,7 +97,11 @@ function SetupBuildings(x: float, z: float, w: float, l: float, h: float, sub: f
 
 function Start () {
 	this.city = new CityConfig();
-	this.meshgen = GetComponent.<MeshGenerator>();
+	if(!this.meshgen)
+		this.meshgen = GetComponent.<MeshGenerator>();
+	
+	this.buildingContainer = transform.Find('Buildings');
+	this.treeContainer = transform.Find('Trees');
 
 	/* - Ported code - */
 
@@ -107,10 +132,9 @@ function Start () {
 					var building_color = MyColors.BUILDING;
 					SetupBuildings(x, z, inner, inner,  h, city.subdiv, building_color);
 				}
-				/* TODO
+				// TODO
 				//create tree meshes
-				else{ setupPark(x, z, inner, inner); }
-				*/
+				// else{ setupPark(x, z, inner, inner); }
 			}
 		}
 	}

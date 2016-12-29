@@ -1,16 +1,16 @@
 ﻿#pragma strict
 
 var target : Transform;
-var distance = 10.0;
+var distance = 400.0;
  
-var xSpeed = 250.0;
+var xSpeed = 1.1;
 var ySpeed = 120.0;
  
-var yMinLimit = -20;
+var yMinLimit = 10;
 var yMaxLimit = 80;
  
-var distanceMin = 3;
-var distanceMax = 15;
+var distanceMin = 20;
+var distanceMax = 500;
  
 private var x = 0.0;
 private var y = 0.0;
@@ -34,14 +34,14 @@ function Start () {
  
 function LateUpdate () {
     if (target) {
-        x += Input.GetAxis("Mouse X") * xSpeed * distance* 0.02;
+        x += Input.GetAxis("Mouse X") * xSpeed * distance * 0.02;
         y -= Input.GetAxis("Mouse Y") * ySpeed * 0.02;
  
  		y = ClampAngle(y, yMinLimit, yMaxLimit);
  
 		var rotation = Quaternion.Euler(y, x, 0);
  
-		distance = Mathf.Clamp(distance - Input.GetAxis("Mouse ScrollWheel")*5, distanceMin, distanceMax);
+		distance = Mathf.Clamp(distance - Input.GetAxis("Mouse ScrollWheel"), distanceMin, distanceMax);
  
 		var hit : RaycastHit;
 		if (Physics.Linecast (target.position, transform.position, hit)) {

@@ -10,14 +10,13 @@ private var city: CityConfig;
 private var buildingContainer: Transform;
 private var treeContainer: Transform;
 
-/*
 //create park 
-function SetupPark(x, z, w, l){
+function SetupPark(x: float, z: float, w: float, l: float){
 	var trees = new List.<GameObject>();
-	for(var i=0; i<getRandInt(0, city.tree_max);i++){
-		var tree_x = getRandInt(x-w/2, x+w/2);
-		var tree_z = getRandInt(z-l/2, z+l/2);
-		trees.push(new Tree(tree_x, tree_z).group);
+	for(var i=0; i<CityGenerator.Random.GetRandInt(0, city.tree_max);i++){
+		var tree_x = CityGenerator.Random.GetRandInt(x-w/2, x+w/2);
+		var tree_z = CityGenerator.Random.GetRandInt(z-l/2, z+l/2);
+		trees.Add(new ParkTree(tree_x, tree_z, meshgen).group);
 	}
 	//merge trees for this block into single mesh
 	if(trees.Count > 0) {
@@ -25,7 +24,6 @@ function SetupPark(x, z, w, l){
 		treesMerged.transform.parent = treeContainer;
 	}
 }
-*/
 
 //recursively create buildings return array of meshes
 function SetupBuildings(x: float, z: float, w: float, l: float, h: float, sub: float, color: int){
@@ -132,9 +130,8 @@ function Start () {
 					var building_color = MyColors.BUILDING;
 					SetupBuildings(x, z, inner, inner,  h, city.subdiv, building_color);
 				}
-				// TODO
 				//create tree meshes
-				// else{ setupPark(x, z, inner, inner); }
+				else{ SetupPark(x, z, inner, inner); }
 			}
 		}
 	}

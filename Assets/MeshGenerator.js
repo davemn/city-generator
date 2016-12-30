@@ -4,6 +4,7 @@ public class MeshGenerator extends MonoBehaviour
 {
 	public var boxPrefab: Transform;
 	public var waterPrefab: Transform;
+	public var cylinderPrefab: Transform;
 	public var mergePrefab: Transform;
 
 	/* returns GameObject */
@@ -47,6 +48,29 @@ public class MeshGenerator extends MonoBehaviour
 	public function getWaterMesh (w: float, h: float, l: float, x: float, y: float, z: float)
 	{
 		return this.getBoxMesh(MyColors.WATER, w, h, l, x, y, z, false);
+	}
+
+	//create a cylinder mesh with a geometry and material
+	public function getCylinderMesh(c: int, rb: float, h: float, rt: float, x: float, y: float, z: float) {
+		var cyl: Transform = Instantiate (cylinderPrefab, new Vector3 (x,y,z), Quaternion.identity);
+		// TODO support diff radius for top & bottom, ala THREE.CylinderGeometry
+
+		// default cylinder mesh is 2 units tall, is scaled in prefab to make a unit cylinder
+		// as a result, set scale relative to prefab, instead of absolute
+		cyl.localScale = Vector3.Scale(cyl.localScale, new Vector3(rb,h,rb));
+
+		var cylRend: MeshRenderer = cyl.GetComponent.<MeshRenderer>();
+		var cylMat: Material = cylRend.material;
+
+		var r: int = (c >> 16) & 0xFF;
+		var g: int = (c >> 8) & 0xFF;
+		var b: int = c & 0xFF;
+		cylMat.color = new Color(r / 255.0, g / 255.0, b / 255.0, 1.0);
+
+		cylRend.receiveShadows = true;
+		cylRend.shadowCastingMode = Rendering.ShadowCastingMode.On;
+
+		return cyl.gameObject;
 	}
 
 	// In Unity terms, would be more appropriately named 'mergeGameObjects'.

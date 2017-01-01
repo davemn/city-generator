@@ -47,7 +47,7 @@ public class MeshGenerator extends MonoBehaviour
 
 	public function getWaterMesh (w: float, h: float, l: float, x: float, y: float, z: float)
 	{
-		return this.getBoxMesh(MyColors.WATER, w, h, l, x, y, z, false);
+		return this.getBoxMesh(CityGenerator.Color.WATER, w, h, l, x, y, z, false);
 	}
 
 	//create a cylinder mesh with a geometry and material

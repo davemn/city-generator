@@ -17,9 +17,9 @@ public class ParkTree
 		this.parts = new List.<GameObject>();
 
 		var h = CityGenerator.Random.GetRandInt(2, 4);
-		var trunk = meshgen.getBoxMesh(MyColors.LIGHT_BROWN, 2, h, 2, x, h/2+city.curb_h, z);
-		var leaves = meshgen.getCylinderMesh(MyColors.TREE, 5, 10, 0,  x, h+5+city.curb_h, z);
-		var leaves2 = meshgen.getCylinderMesh(MyColors.TREE, 5, 10, 0,  x, leaves.transform.position.y+5, z);
+		var trunk = meshgen.getBoxMesh(CityGenerator.Color.LIGHT_BROWN, 2, h, 2, x, h/2+city.curb_h, z);
+		var leaves = meshgen.getCylinderMesh(CityGenerator.Color.TREE, 5, 10, 0,  x, h+5+city.curb_h, z);
+		var leaves2 = meshgen.getCylinderMesh(CityGenerator.Color.TREE, 5, 10, 0,  x, leaves.transform.position.y+5, z);
 		// leaves.transform.rotation.y = Mathf.Random;
 		leaves.transform.Rotate(new Vector3(0,Random.Range(0.0f,360.0f),0));
 

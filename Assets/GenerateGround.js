@@ -27,7 +27,7 @@ public class GenerateGround extends MonoBehaviour {
 		var earth_meshes = new List.<GameObject>();
 		var street_meshes = new List.<GameObject>();
 		//lowest ground Layer
-		var bedrock = meshgen.getBoxMesh(MyColors.LIGHT_BROWN, city.width, city.baze, city.length);
+		var bedrock = meshgen.getBoxMesh(CityGenerator.Color.LIGHT_BROWN, city.width, city.baze, city.length);
 		bedrock.transform.position.y = (-(city.baze/2) - city.water_height - street_h);
 		bedrock.GetComponent.<MeshRenderer>().receiveShadows = false;
 		bedrock.transform.parent = transform;
@@ -46,10 +46,10 @@ public class GenerateGround extends MonoBehaviour {
 					var x = ((city.block*i) + city.block/2) - city.width/2;
 					var z = ((city.block*j) + city.block/2) - city.length/2;
 
-					earth_mesh = meshgen.getBoxMesh(MyColors.DARK_BROWN, city.block, city.water_height, city.block, x, (-(city.water_height/2) - street_h), z);
+					earth_mesh = meshgen.getBoxMesh(CityGenerator.Color.DARK_BROWN, city.block, city.water_height, city.block, x, (-(city.water_height/2) - street_h), z);
 					earth_mesh.transform.parent = transform;
 
-					street_mesh = meshgen.getBoxMesh(MyColors.GREY, city.block, street_h, city.block, x, -(street_h/2), z);
+					street_mesh = meshgen.getBoxMesh(CityGenerator.Color.GREY, city.block, street_h, city.block, x, -(street_h/2), z);
 					street_mesh.transform.parent = transform;
 
 					earth_meshes.Add (earth_mesh);

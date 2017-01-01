@@ -107,7 +107,7 @@ function Start () {
 
 	for (var i = 0; i < city.blocks_x; i++) {
 		for (var j = 0; j < city.blocks_z; j++) {
-			if(MyColors.ColorsEqual (watermap.GetPixel(j,i), Color.white)) {
+			if(CityGenerator.Color.ColorsEqual (watermap.GetPixel(j,i), Color.white)) {
 				var x = ((city.block*i) + city.block/2) - city.width/2;
 				var z = ((city.block*j) + city.block/2) - city.length/2;
 				//get values from heightmap array
@@ -119,7 +119,7 @@ function Start () {
 				//with inner block margins
 				var inner = w-(city.inner_block_margin*2);
 				//create curb mesh
-				var curb_color = MyColors.GROUND;
+				var curb_color = CityGenerator.Color.GROUND;
 				curb = meshgen.getBoxMesh(curb_color, w, city.curb_h, w);
 				curb.transform.parent = transform;
 				curb.transform.localPosition = new Vector3(x, city.curb_h/2, z);
@@ -127,7 +127,7 @@ function Start () {
 				//create buildings in debug mode the building color is mapped to the hightmap
 				if(hm > city.tree_threshold) {
 					// var building_color = DEBUG ? getGreyscaleColor(hm) : colors.BUILDING;
-					var building_color = MyColors.BUILDING;
+					var building_color = CityGenerator.Color.BUILDING;
 					SetupBuildings(x, z, inner, inner,  h, city.subdiv, building_color);
 				}
 				//create tree meshes

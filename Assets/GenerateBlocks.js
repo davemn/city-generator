@@ -136,7 +136,3 @@ function Start () {
 		}
 	}
 }
-
-function Update () {
-
-}

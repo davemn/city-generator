@@ -20,20 +20,5 @@ namespace CityGenerator {
 		public static float RandDir() {
 			return UnityEngine.Mathf.Round(UnityEngine.Random.value) * 2 - 1;
 		}
-
-		// Fisher-Yates shuffle, ala Lodash
-		// Mutates the input List
-		public static void ShuffleList(IList<T> lst) {
-			// Loops through array
-			for (int i = lst.Count-1; i > 0; i--) {
-				// Randomize a number between 0 and i (so that the range decreases each time)
-				int rnd = UnityEngine.Random.Range(0,i+1); // +1 since Range() for ints is [,)
-
-				// Swap the new and old values
-				T temp = lst[i];
-				lst[i] = lst[rnd];
-				lst[rnd] = temp;
-			}
-		}
 	}
 }

@@ -9,8 +9,14 @@ private var city: CityConfig;
 private var buildingContainer: Transform;
 private var treeContainer: Transform;
 
+// TODO to be used by _.reject call below
+private function ValidRowElem(n: float) {
+	return n >= city.tree_threshold;
+}
+
 //get rows or columns with no buildings
 private function GetEmptyRows() {
+	// TODO replace with Lodash.Map() - https://forum.unity3d.com/threads/unityscript-callback-functions-cannot-cast-from-source-type-to-destination-type.199038/
 	var rowsColor = new List.<Color>(heightmap.GetPixels());
 	var rows = new List.<float>();
 	for(var p=0; p < rowsColor.Count; p++){
@@ -50,7 +56,7 @@ function Start () {
 	
 	/* - Ported code - createBridges() */
 	//create bridges
-	var bridges = CityGenerator.Random.ShuffleList(GetEmptyRows()).RemoveRange(0, city.bridge_max);
+	var bridges = CityGenerator.Lodash.Shuffle(GetEmptyRows()).RemoveRange(0, city.bridge_max);
 	// TODO continue porting
 	var parts = new List.<GameObject>();
 	for(var i=0;i<bridges.length;i++){

@@ -34,6 +34,16 @@ namespace CityGenerator {
 			return resList;
 		}
 
-		// TODO _.reject
+		// _.reject
+		public static List<T> Reject<T>(List<T> collection, System.Func<T,bool> predicate) {
+			System.Func<T,bool> notPredicate = t => !predicate (t);
+			IEnumerable<T> res = collection.Where (notPredicate);
+
+			List<T> resList = new List<T> ();
+			foreach (T elem in res) {
+				resList.Add (elem);
+			}
+			return resList;
+		}
 	}
 }

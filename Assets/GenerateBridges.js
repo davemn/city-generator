@@ -9,49 +9,43 @@ private var city: CityConfig;
 private var buildingContainer: Transform;
 private var treeContainer: Transform;
 
-// TODO to be used by _.reject call below
-/*
-private function ValidRowElem(n: float) {
-	return n >= city.tree_threshold;
-}
-*/
-
 private function ColorToFloat(c: Color): float {
 	return c.grayscale;
 }
 
+private function MapRowIsFull(n: float): boolean {
+	return n < city.tree_threshold;
+}
+
 //get rows or columns with no buildings
-private function GetEmptyRows(): List.<float> {
-	// <<<
-	/*
-	var rowsColor = new List.<Color>(heightmap.GetPixels());
-	var rows = new List.<float>();
-	for(var p=0; p < rowsColor.Count; p++){
-		rows.Add(rowsColor[p].grayscale);
-	}
-	*/
-	// ---
+private function GetEmptyRows(): List.<CityGenerator.MapRow> {
 	var rowsColor = new List.<Color>(heightmap.GetPixels());
 	var rows = CityGenerator.Lodash.Map(rowsColor, ColorToFloat);
-	return rows;
-	// >>>
 
 	/* - begin ported code - */
-	/*
-	var i, low, lri, lci, empty = [];
+	var i: int;
+	var low;
+	var lri;
+	var lci;
+	var empty = new List.<CityGenerator.MapRow>();
 	//loop through rows
 	for(i=0; i<rows.Count;i++){
 		// list of float grayscale vals for the current row
 		var row = rows.GetRange(i*heightmap.width, heightmap.width);
 
-		// TODO continue porting
 		//all values in row are under tree threshold
-		row = _.reject(row, function(n) { return n < city.tree_threshold; });
-		if(!row.length){
-			empty.push({axis: 0, index: i});
+		row = CityGenerator.Lodash.Reject(row, MapRowIsFull);
+
+		if(row.Count == 0){
+			var emptyRow: CityGenerator.MapRow;
+			emptyRow.axis = 0;
+			emptyRow.index = i;
+			empty.Add(emptyRow);
 		}
 	}
+	// TODO continue porting
 	//loop through columns
+	/*
 	for(i=0; i<heightmap[0].length;i++){
 		var col = _.map(heightmap, function(row){ return row[i]; });
 		col = _.reject(col, function(n) { return n < city.tree_threshold; });
@@ -59,8 +53,8 @@ private function GetEmptyRows(): List.<float> {
 			empty.push({axis: 1, index: i});
 		}
 	}
-	return empty;
 	*/
+	return empty;
 }
 
 function Start () {

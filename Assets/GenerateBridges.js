@@ -17,6 +17,14 @@ private function MapRowIsFull(n: float): boolean {
 	return n < city.tree_threshold;
 }
 
+private function GetRow(heightmap: List.<float>, rowI: int, width: int) {
+
+}
+
+private function GetColumn(heightmap: List.<float>, colI: int, width: int) {
+
+}
+
 //get rows or columns with no buildings
 private function GetEmptyRows(): List.<CityGenerator.MapRow> {
 	var rowsColor = new List.<Color>(heightmap.GetPixels());

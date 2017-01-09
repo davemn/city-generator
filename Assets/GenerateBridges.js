@@ -62,10 +62,10 @@ private function GetEmptyRows(): List.<CityGenerator.MapRow> {
 
 		col = CityGenerator.Lodash.Reject(col, MapRowIsFull);
 		if(col.Count == 0){
-			var emptyRow: CityGenerator.MapRow;
-			emptyRow.axis = 1;
-			emptyRow.index = i;
-			empty.Add(emptyRow);
+			var emptyCol: CityGenerator.MapRow;
+			emptyCol.axis = 1;
+			emptyCol.index = i;
+			empty.Add(emptyCol);
 		}
 	}
 	return empty;
@@ -82,8 +82,8 @@ function Start () {
 	/* - Ported code - createBridges() */
 	//create bridges
 	// bridges = _.shuffle(getEmptyRows()).splice(0, city.bridge_max);	
-	var bridges = CityGenerator.Lodash.Shuffle(GetEmptyRows());
-	bridges.RemoveRange(0, Mathf.FloorToInt(city.bridge_max));
+	var bridges: List.<CityGenerator.MapRow> = CityGenerator.Lodash.Shuffle(GetEmptyRows());
+	bridges = bridges.GetRange(0, Mathf.FloorToInt(city.bridge_max));
 
 	// TODO continue porting
 	/*

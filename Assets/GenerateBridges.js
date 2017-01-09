@@ -8,6 +8,7 @@ var heightmap: Texture2D;
 private var city: CityConfig;
 private var buildingContainer: Transform;
 private var treeContainer: Transform;
+private var heightmapGray: List.<float>;
 
 private function ColorToFloat(c: Color): float {
 	return c.grayscale;
@@ -17,19 +18,22 @@ private function MapRowIsFull(n: float): boolean {
 	return n < city.tree_threshold;
 }
 
-private function GetRow(heightmap: List.<float>, rowI: int, width: int) {
-
+private function GetHeightmapRow(row: int): List.<float> {
+	var px = this.heightmapGray;
+	return px.GetRange(row*heightmap.width, heightmap.width);
 }
 
-private function GetColumn(heightmap: List.<float>, colI: int, width: int) {
-
+private function GetHeightmapColumn(column: int): List.<float> {
+	var px = this.heightmapGray;
+	var columnList = new List.<float>();
+	for(var r=0; r < heightmap.height; r++){
+		columnList.Add(px[r*heightmap.width + column]);
+	}
+	return columnList;
 }
 
 //get rows or columns with no buildings
 private function GetEmptyRows(): List.<CityGenerator.MapRow> {
-	var rowsColor = new List.<Color>(heightmap.GetPixels());
-	var rows = CityGenerator.Lodash.Map(rowsColor, ColorToFloat);
-
 	/* - begin ported code - */
 	var i: int;
 	var low;
@@ -37,9 +41,9 @@ private function GetEmptyRows(): List.<CityGenerator.MapRow> {
 	var lci;
 	var empty = new List.<CityGenerator.MapRow>();
 	//loop through rows
-	for(i=0; i<rows.Count;i++){
-		// list of float grayscale vals for the current row
-		var row = rows.GetRange(i*heightmap.width, heightmap.width);
+	for(i=0; i<heightmap.height;i++){
+		// list of float grayscale vals for the current ro
+		var row = GetHeightmapRow(i);
 
 		//all values in row are under tree threshold
 		row = CityGenerator.Lodash.Reject(row, MapRowIsFull);
@@ -51,17 +55,18 @@ private function GetEmptyRows(): List.<CityGenerator.MapRow> {
 			empty.Add(emptyRow);
 		}
 	}
-	// TODO continue porting
+
 	//loop through columns
-	/*
-	for(i=0; i<heightmap[0].length;i++){
-		var col = _.map(heightmap, function(row){ return row[i]; });
+	for(i=0; i<heightmap.width;i++){
+		var col = GetHeightmapColumn(i);
+		// TODO continue porting
+		/*
 		col = _.reject(col, function(n) { return n < city.tree_threshold; });
 		if(!col.length){
 			empty.push({axis: 1, index: i});
 		}
+		*/
 	}
-	*/
 	return empty;
 }
 
@@ -69,6 +74,9 @@ function Start () {
 	this.city = new CityConfig();
 	if(!this.meshgen)
 		this.meshgen = GetComponent.<MeshGenerator>();
+
+	var heightmapColor = new List.<Color>(heightmap.GetPixels());
+	this.heightmapGray = CityGenerator.Lodash.Map(heightmapColor, ColorToFloat);
 	
 	/* - Ported code - createBridges() */
 	//create bridges

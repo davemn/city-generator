@@ -42,7 +42,7 @@ private function GetEmptyRows(): List.<CityGenerator.MapRow> {
 	var empty = new List.<CityGenerator.MapRow>();
 	//loop through rows
 	for(i=0; i<heightmap.height;i++){
-		// list of float grayscale vals for the current ro
+		// list of float grayscale vals for the current row
 		var row = GetHeightmapRow(i);
 
 		//all values in row are under tree threshold
@@ -59,13 +59,14 @@ private function GetEmptyRows(): List.<CityGenerator.MapRow> {
 	//loop through columns
 	for(i=0; i<heightmap.width;i++){
 		var col = GetHeightmapColumn(i);
-		// TODO continue porting
-		/*
-		col = _.reject(col, function(n) { return n < city.tree_threshold; });
-		if(!col.length){
-			empty.push({axis: 1, index: i});
+
+		col = CityGenerator.Lodash.Reject(col, MapRowIsFull);
+		if(col.Count == 0){
+			var emptyRow: CityGenerator.MapRow;
+			emptyRow.axis = 1;
+			emptyRow.index = i;
+			empty.Add(emptyRow);
 		}
-		*/
 	}
 	return empty;
 }

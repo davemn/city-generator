@@ -71,6 +71,19 @@ private function GetEmptyRows(): List.<CityGenerator.MapRow> {
 	return empty;
 }
 
+//get x,z from index
+private function GetCoordinateFromIndex(index: float, offset: float) {
+	return (-(offset/2f) + (index * city.block)) + (city.block/2f);
+}
+
+//create a box mesh with a geometry and material
+private function GetBoxMeshOpts(options: MeshOpts) {
+	var o=options;
+	return meshgen.getBoxMesh(o.color, o.w, o.h, o.l, o.x, o.y, o.z, o.shadow);
+}
+
+/* --- */
+
 function Start () {
 	this.city = new CityConfig();
 	if(!this.meshgen)
@@ -81,39 +94,43 @@ function Start () {
 	
 	/* - Ported code - createBridges() */
 	//create bridges
-	// bridges = _.shuffle(getEmptyRows()).splice(0, city.bridge_max);	
 	var bridges: List.<CityGenerator.MapRow> = CityGenerator.Lodash.Shuffle(GetEmptyRows());
 	bridges = bridges.GetRange(0, Mathf.FloorToInt(city.bridge_max));
 
-	// TODO continue porting
-	/*
 	var parts = new List.<GameObject>();
-	for(var i=0;i<bridges.length;i++){
-		var lx = getCoordinateFromIndex(bridges[i].index, city.width);
-		var lz = getCoordinateFromIndex(bridges[i].index, city.length);
-		parts.push(getBoxMeshOpts({
-			color: colors.BUILDING,
-			w: bridges[i].axis ? city.width : city.road_w,
-			l: bridges[i].axis ? city.road_w : city.length,
-			h: 4,
-			y: city.bridge_h+2,
-			x: bridges[i].axis ? 0 : lx,
-			z: bridges[i].axis ? lz : 0
-		}));
+	for(var i=0;i<bridges.Count;i++){
+		var lx = GetCoordinateFromIndex(bridges[i].index, city.width);
+		var lz = GetCoordinateFromIndex(bridges[i].index, city.length);
+
+		var partsOpts = new MeshOpts();
+		partsOpts.color = CityGenerator.Color.BUILDING;
+		partsOpts.w = (bridges[i].axis == 1) ? city.width : city.road_w;
+		partsOpts.l = (bridges[i].axis == 1) ? city.road_w : city.length;
+		partsOpts.h = 4;
+		partsOpts.y = city.bridge_h+2;
+		partsOpts.x = bridges[i].axis ? 0 : lx;
+		partsOpts.z = bridges[i].axis ? lz : 0;
+		partsOpts.shadow = true;
+
+		parts.Add(GetBoxMeshOpts(partsOpts));
+
 		//columns
-		for(var j=0;j<(bridges[i].axis ? city.blocks_x : city.blocks_z);j++){
+		for(var j=0;j<((bridges[i].axis == 1) ? city.blocks_x : city.blocks_z);j++){
 			var h = city.bridge_h+(city.curb_h*2)+(city.water_height);
-			parts.push(getBoxMeshOpts({
-				color: colors.BUILDING,
-				w: 10,
-				l: 10,
-				h: h,
-				y: -((city.curb_h*2)+(city.water_height))+(h/2),
-				x: bridges[i].axis ? getCoordinateFromIndex(j, city.width) : lx,
-				z: bridges[i].axis ? lz : getCoordinateFromIndex(j, city.length)
-			}));
+
+			partsOpts.color = CityGenerator.Color.BUILDING;
+			partsOpts.w = 10;
+			partsOpts.l = 10;
+			partsOpts.h = h;
+			partsOpts.y = -((city.curb_h*2)+(city.water_height))+(h/2);
+			partsOpts.x = (bridges[i].axis == 1) ? GetCoordinateFromIndex(j, city.width) : lx;
+			partsOpts.z = (bridges[i].axis == 1) ? lz : GetCoordinateFromIndex(j, city.length);
+
+			parts.Add(GetBoxMeshOpts(partsOpts));
 		}
 	}
-	if(parts.length) scene.add(mergeMeshes(parts));
-	*/
+	if(parts.Count > 0) {
+		var merged = meshgen.mergeMeshes(parts.ToArray());
+		merged.transform.parent = transform;
+	}
 }

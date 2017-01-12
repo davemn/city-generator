@@ -11,7 +11,7 @@ private var treeContainer: Transform;
 private var heightmapGray: List.<float>;
 
 private function ColorToFloat(c: Color): float {
-	return c.grayscale;
+	return c.r;
 }
 
 private function BlockHasTrees(n: float): boolean {
@@ -47,7 +47,6 @@ private function GetEmptyRows(): List.<CityGenerator.MapRow> {
 
 		//all values in row are over tree threshold
 		row = CityGenerator.Lodash.Reject(row, BlockHasTrees);
-		Debug.Log('ROW '+i+' - '+(row.Count)+' blocks above threshold');
 
 		if(row.Count == 0){
 			var emptyRow: CityGenerator.MapRow;
@@ -62,7 +61,6 @@ private function GetEmptyRows(): List.<CityGenerator.MapRow> {
 		var col = GetHeightmapColumn(i);
 
 		col = CityGenerator.Lodash.Reject(col, BlockHasTrees);
-		Debug.Log('COL '+i+' - '+(col.Count)+' blocks above threshold');
 
 		if(col.Count == 0){
 			var emptyCol: CityGenerator.MapRow;
@@ -71,7 +69,6 @@ private function GetEmptyRows(): List.<CityGenerator.MapRow> {
 			empty.Add(emptyCol);
 		}
 	}
-	Debug.Log('Empty rows := ' + empty.Count);
 	return empty;
 }
 

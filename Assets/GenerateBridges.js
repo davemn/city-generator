@@ -14,8 +14,8 @@ private function ColorToFloat(c: Color): float {
 	return c.grayscale;
 }
 
-private function MapRowIsFull(n: float): boolean {
-	return n < city.tree_threshold;
+private function BlockHasTrees(n: float): boolean {
+	return n <= city.tree_threshold;
 }
 
 private function GetHeightmapRow(row: int): List.<float> {
@@ -45,8 +45,8 @@ private function GetEmptyRows(): List.<CityGenerator.MapRow> {
 		// list of float grayscale vals for the current row
 		var row = GetHeightmapRow(i);
 
-		//all values in row are under tree threshold
-		row = CityGenerator.Lodash.Reject(row, MapRowIsFull);
+		//all values in row are over tree threshold
+		row = CityGenerator.Lodash.Reject(row, BlockHasTrees);
 
 		if(row.Count == 0){
 			var emptyRow: CityGenerator.MapRow;
@@ -60,7 +60,7 @@ private function GetEmptyRows(): List.<CityGenerator.MapRow> {
 	for(i=0; i<heightmap.width;i++){
 		var col = GetHeightmapColumn(i);
 
-		col = CityGenerator.Lodash.Reject(col, MapRowIsFull);
+		col = CityGenerator.Lodash.Reject(col, BlockHasTrees);
 		if(col.Count == 0){
 			var emptyCol: CityGenerator.MapRow;
 			emptyCol.axis = 1;
@@ -95,7 +95,8 @@ function Start () {
 	/* - Ported code - createBridges() */
 	//create bridges
 	var bridges: List.<CityGenerator.MapRow> = CityGenerator.Lodash.Shuffle(GetEmptyRows());
-	bridges = bridges.GetRange(0, Mathf.FloorToInt(city.bridge_max));
+	if(bridges.Count > 0) // for parity with Array.splice()
+		bridges = bridges.GetRange(0, Mathf.Min(Mathf.FloorToInt(city.bridge_max), bridges.Count));
 
 	var parts = new List.<GameObject>();
 	for(var i=0;i<bridges.Count;i++){

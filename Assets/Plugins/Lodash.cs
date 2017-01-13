@@ -45,5 +45,18 @@ namespace CityGenerator {
 			}
 			return resList;
 		}
+
+		// _.pull
+		// https://msdn.microsoft.com/en-us/library/w5zay9db.aspx
+		public static List<T> Pull<T>(List<T> array, params T[] values) {
+			// foreach(T val in values){
+			for(int i = 0; i < values.Length; i++) {
+				T val = values [i];
+				while(array.Contains(val)){
+					array.Remove (val);
+				}
+			}
+			return array;
+		}
 	}
 }

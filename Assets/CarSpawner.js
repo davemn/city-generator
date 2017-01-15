@@ -47,5 +47,5 @@ function Update () {
 		else{
 			car.Drive();
 		}
-	});
+	};
 }

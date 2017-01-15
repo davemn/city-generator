@@ -11,7 +11,7 @@
 		public static int GREY = 0x999999;
 		public static int WATER = 0x4B95DE;
 		public static int TRAIN = 0x444444;
-		public static int CARS = 0xCC4E4E;
+		public static int[] CARS = new int[]{ 0xCC4E4E };
 
 		public static bool ColorsEqual (UnityEngine.Color a, UnityEngine.Color b) {
 			float err = UnityEngine.Mathf.Abs(a.r - b.r) + UnityEngine.Mathf.Abs(a.g - b.g) + UnityEngine.Mathf.Abs(a.b - b.b);

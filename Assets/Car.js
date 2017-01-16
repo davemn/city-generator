@@ -24,7 +24,7 @@ public class Car extends MonoBehaviour {
 	}
 
 	// new Car(rand_x, rand_z);
-	public function Car(x: float, z float, dx, dz) {
+	public function Car(x: float, z: float, dx, dz) {
 		this.city = new CityConfig();
 
 		/* - begin port - */

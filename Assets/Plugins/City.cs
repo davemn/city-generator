@@ -72,16 +72,16 @@ namespace CityGenerator {
 			return n <= City.tree_threshold;
 		}
 
-		private static List<float> GetHeightmapRow(UnityEngine.Texture2D heightmap, List<float> heightmapGray, int row) {
+		private static List<float> GetHeightmapRow(List<float> heightmapGray, int width, int height, int row) {
 			List<float> px = heightmapGray;
-			return px.GetRange(row*heightmap.width, heightmap.width);
+			return px.GetRange(row*width, width);
 		}
 
-		private static List<float> GetHeightmapColumn(UnityEngine.Texture2D heightmap, List<float> heightmapGray, int column) {
+		private static List<float> GetHeightmapColumn(List<float> heightmapGray, int width, int height, int column) {
 			List<float> px = heightmapGray;
 			List<float> columnList = new List<float>();
-			for(int r=0; r < heightmap.height; r++){
-				columnList.Add(px[r*heightmap.width + column]);
+			for(int r=0; r < height; r++){
+				columnList.Add(px[r*width + column]);
 			}
 			return columnList;
 		}
@@ -110,7 +110,7 @@ namespace CityGenerator {
 			//loop through rows
 			for(i=0; i<heightmap.height; i++){
 				// list of float grayscale vals for the current row
-				var row = GetHeightmapRow(heightmap, heightmapGray, i);
+				var row = GetHeightmapRow(heightmapGray, heightmap.width, heightmap.height, i);
 
 				//all values in row are over tree threshold
 				row = CityGenerator.Lodash.Reject(row, BlockHasTrees);
@@ -125,7 +125,7 @@ namespace CityGenerator {
 
 			//loop through columns
 			for(i=0; i<heightmap.width;i++){
-				var col = GetHeightmapColumn(heightmap, heightmapGray, i);
+				var col = GetHeightmapColumn(heightmapGray, heightmap.width, heightmap.height, i);
 
 				col = CityGenerator.Lodash.Reject(col, BlockHasTrees);
 

@@ -45,7 +45,7 @@ function Update () {
 		}
 		//update car positions
 		else{
-			car.Drive();
+			car.Drive(Time.deltaTime);
 		}
 	};
 }

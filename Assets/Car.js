@@ -3,9 +3,6 @@
 import System.Collections.Generic;
 
 public class Car extends MonoBehaviour {
-	public var mesh: GameObject;
-	public var meshgen: MeshGenerator;
-
 	private var speed: float;
 	private var color: int;
 	private var arrived_threshold: int;
@@ -16,21 +13,22 @@ public class Car extends MonoBehaviour {
 	private var dx: float = 0.0f;
 	private var dz: float = 0.0f;
 
+	// public function Car(x: float, z: float)
 	function Start () {
-
-	}
-
-	function Update () {
-
-	}
-
-	// new Car(rand_x, rand_z);
-	public function Car(x: float, z: float) {
 		/* - begin port - */
 		this.speed = Random.value * (CityGenerator.City.car_speed_min - CityGenerator.City.car_speed_max) + CityGenerator.City.car_speed_min;
 		this.color = CityGenerator.Color.CARS[CityGenerator.Random.GetRandInt(0, CityGenerator.Color.CARS.Length)];
-		this.mesh = meshgen.getBoxMesh(this.color, 4, 3, 9, x, 3, z, false);
-		this.mesh.transform.parent = transform;
+
+		// Use a Unity prefab instead of generating the mesh - the only dynamic part remaining is 
+		// setting the mesh color.
+
+		var rend: MeshRenderer = GetComponent.<MeshRenderer>();
+		var mat: Material = rend.material;
+
+		var r: int = (this.color >> 16) & 0xFF;
+		var g: int = (this.color >> 8) & 0xFF;
+		var b: int = this.color & 0xFF;
+		mat.color = new Color(r / 255.0, g / 255.0, b / 255.0, 1.0);
 
 		this.arrived_threshold = 2;
 		this.collide_threshold = 2;
@@ -39,37 +37,40 @@ public class Car extends MonoBehaviour {
 		this.lane_offset = this.dir * CityGenerator.City.road_w/4;
 		
 		this.axis = Mathf.Round(Random.value);
+
+		var x = transform.position.x;
+		var z = transform.position.z;
 		
-		if(this.axis > 0.0f){
-			this.mesh.transform.localEulerAngles.y = Mathf.Rad2Deg * Mathf.PI/2;
+		if(this.axis > 0.0f) {
+			transform.localEulerAngles.y = Mathf.Rad2Deg * Mathf.PI/2;
 			z = z - this.lane_offset;
 			x = -(this.dir * (CityGenerator.City.width/2));
 		}
-		else{
+		else {
 			x = x - this.lane_offset;
 			z = -(this.dir * (CityGenerator.City.width/2));
 		}
 		
-		this.mesh.transform.localPosition = Vector3(x, 3, z);
+		transform.position = Vector3(x, 3, z);
 	}
 
-	public function Drive(deltaTime: float) {
+	function Update () {
 		this.CheckCollision();
-		if(this.axis){
-			this.mesh.transform.Translate(this.dir * this.speed * deltaTime, 0.0f, 0.0f);
+		if(this.axis > 0.0f){
+			transform.Translate(this.dir * this.speed * Time.deltaTime, 0.0f, 0.0f);
 		}
 		else{
-			this.mesh.transform.Translate(0.0f, 0.0f, this.dir * this.speed * deltaTime);
+			transform.Translate(0.0f, 0.0f, this.dir * this.speed * Time.deltaTime);
 		}
 	}
 
 	public function Arrived(): boolean {
-		var out = CityGenerator.City.OutsideCity(this.mesh.transform.position.x, this.mesh.transform.position.z);
+		var out = CityGenerator.City.OutsideCity(transform.position.x, transform.position.z);
 		return out ||
-			((this.mesh.transform.position.x < (dx + this.arrived_threshold)) &&
-			(this.mesh.transform.position.x > (dx - this.arrived_threshold)) &&
-			(this.mesh.transform.position.z < (dz + this.arrived_threshold)) &&
-			(this.mesh.transform.position.z > (dz - this.arrived_threshold)));
+			((transform.localPosition.x < (dx + this.arrived_threshold)) &&
+			(transform.localPosition.x > (dx - this.arrived_threshold)) &&
+			(transform.localPosition.z < (dz + this.arrived_threshold)) &&
+			(transform.localPosition.z > (dz - this.arrived_threshold)));
 	}
 
 	public function CheckCollision() {

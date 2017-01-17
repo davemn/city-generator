@@ -1,7 +1,9 @@
 ﻿#pragma strict
 
+var carPrefab: Transform;
+
 private var city: CityConfig;
-private var cars: List.<Car>;
+private var cars: List.<Transform>;
 private var locked: boolean;
 private var max_add_rate: int;
 
@@ -9,7 +11,7 @@ private var unlockAt: float;
 
 function Start () {
 	this.city = new CityConfig();
-	this.cars = new List.<Car>();
+	this.cars = new List.<Transform>();
 	this.locked = false;
 	this.max_add_rate = 300;
 }
@@ -19,9 +21,11 @@ function Add () {
 	//get random x and z on a road
 	var rand_x = city.block * CityGenerator.Random.GetRandInt((-city.blocks_x/2+1), city.blocks_x/2);
 	var rand_z = city.block * CityGenerator.Random.GetRandInt((-city.blocks_z/2+1), city.blocks_z/2);
-	var car = new Car(rand_x, rand_z);
-	this.cars.Add(car);
-	car.mesh.transform.parent = transform;
+
+	var car: Transform  = Instantiate (carPrefab, new Vector3 (rand_x, 0.0f, rand_z), Quaternion.identity);
+	car.parent = transform;
+
+	this.cars.Add (car);
 
 	// setTimeout(function(){ this.locked = false; }, this.max_add_rate);
 	this.unlockAt = Time.time + this.max_add_rate;
@@ -37,15 +41,13 @@ function Update () {
 		this.Add();
 	}
 
-	for(var car: Car in this.cars) {
+	for(var car: Transform in this.cars) {
+		var carScript = car.GetComponent.<Car>();
+
 		//remove from car array
-		if(car.Arrived()){
+		if(carScript.Arrived()){
 			CityGenerator.Lodash.Pull(this.cars, car);
-			Destroy (car.mesh);
-		}
-		//update car positions
-		else{
-			car.Drive(Time.deltaTime);
+			Destroy (car.gameObject);
 		}
 	};
 }

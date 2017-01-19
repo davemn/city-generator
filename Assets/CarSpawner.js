@@ -7,13 +7,13 @@ private var cars: List.<Transform>;
 private var locked: boolean;
 private var max_add_rate: int;
 
-private var unlockAt: float;
+private var unlockAt: float = 0.0f;
 
 function Start () {
 	this.city = new CityConfig();
 	this.cars = new List.<Transform>();
 	this.locked = false;
-	this.max_add_rate = 300;
+	this.max_add_rate = 0.3f;
 }
 
 function Add () {
@@ -32,7 +32,7 @@ function Add () {
 }
 
 function Update () {
-	if(this.locked && Time.time > unlockAt) {
+	if(this.locked && (Time.time > this.unlockAt)) {
 		this.locked = false;
 	}
 

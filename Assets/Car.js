@@ -37,7 +37,7 @@ public class Car extends MonoBehaviour {
 
 		var x = transform.position.x;
 		var z = transform.position.z;
-		
+
 		if(this.axis > 0.0f) {
 			transform.localEulerAngles.y = 90.0f;
 			z = z - this.lane_offset;
@@ -54,10 +54,10 @@ public class Car extends MonoBehaviour {
 	function Update () {
 		this.CheckCollision();
 		if(this.axis > 0.0f){
-			transform.Translate(this.dir * this.speed * Time.deltaTime, 0.0f, 0.0f);
+			transform.Translate(this.dir * this.speed * Time.deltaTime, 0.0f, 0.0f, Space.World);
 		}
 		else{
-			transform.Translate(0.0f, 0.0f, this.dir * this.speed * Time.deltaTime);
+			transform.Translate(0.0f, 0.0f, this.dir * this.speed * Time.deltaTime, Space.World);
 		}
 	}
 

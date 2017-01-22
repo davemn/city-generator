@@ -1,8 +1,9 @@
 ﻿#pragma strict
 
+import CityGenerator;
+
 var carPrefab: Transform;
 
-private var city: CityConfig;
 private var cars: List.<Transform>;
 private var locked: boolean;
 private var max_add_rate: int;
@@ -10,7 +11,6 @@ private var max_add_rate: int;
 private var unlockAt: float = 0.0f;
 
 function Start () {
-	this.city = new CityConfig();
 	this.cars = new List.<Transform>();
 	this.locked = false;
 	this.max_add_rate = 0.3f;
@@ -19,8 +19,8 @@ function Start () {
 function Add () {
 	this.locked = true;
 	//get random x and z on a road
-	var rand_x = city.block * CityGenerator.Random.GetRandInt((-city.blocks_x/2+1), city.blocks_x/2);
-	var rand_z = city.block * CityGenerator.Random.GetRandInt((-city.blocks_z/2+1), city.blocks_z/2);
+	var rand_x = City.block * CityGenerator.Random.GetRandInt((-City.blocks_x/2+1), City.blocks_x/2);
+	var rand_z = City.block * CityGenerator.Random.GetRandInt((-City.blocks_z/2+1), City.blocks_z/2);
 
 	var car: Transform  = Instantiate (carPrefab, new Vector3 (rand_x, 0.0f, rand_z), Quaternion.identity);
 	car.parent = transform;
@@ -37,7 +37,7 @@ function Update () {
 	}
 
 	//add cars
-	if((this.cars.Count < city.car_max) && !this.locked) {
+	if((this.cars.Count < City.car_max) && !this.locked) {
 		this.Add();
 	}
 

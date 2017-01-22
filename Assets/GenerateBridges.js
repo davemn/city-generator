@@ -1,21 +1,21 @@
 ﻿#pragma strict
 
 import System.Collections.Generic;
+import CityGenerator;
 
 var meshgen: MeshGenerator;
 var heightmap: Texture2D;
 
-private var city: CityConfig;
 private var buildingContainer: Transform;
 private var treeContainer: Transform;
 private var heightmapGray: List.<float>;
 
-private function ColorToFloat(c: Color): float {
+private function ColorToFloat(c: UnityEngine.Color): float {
 	return c.r;
 }
 
 private function BlockHasTrees(n: float): boolean {
-	return n <= city.tree_threshold;
+	return n <= City.tree_threshold;
 }
 
 private function GetHeightmapRow(row: int): List.<float> {
@@ -74,7 +74,7 @@ private function GetEmptyRows(): List.<CityGenerator.MapRow> {
 
 //get x,z from index
 private function GetCoordinateFromIndex(index: float, offset: float) {
-	return (-(offset/2f) + (index * city.block)) + (city.block/2f);
+	return (-(offset/2f) + (index * City.block)) + (City.block/2f);
 }
 
 //create a box mesh with a geometry and material
@@ -86,30 +86,29 @@ private function GetBoxMeshOpts(options: MeshOpts) {
 /* --- */
 
 function Start () {
-	this.city = new CityConfig();
 	if(!this.meshgen)
 		this.meshgen = GetComponent.<MeshGenerator>();
 
-	var heightmapColor = new List.<Color>(heightmap.GetPixels());
+	var heightmapColor = new List.<UnityEngine.Color>(heightmap.GetPixels());
 	this.heightmapGray = CityGenerator.Lodash.Map(heightmapColor, ColorToFloat);
 	
 	/* - Ported code - createBridges() */
 	//create bridges
 	var bridges: List.<CityGenerator.MapRow> = CityGenerator.Lodash.Shuffle(GetEmptyRows());
 	if(bridges.Count > 0) // for parity with Array.splice()
-		bridges = bridges.GetRange(0, Mathf.Min(Mathf.FloorToInt(city.bridge_max), bridges.Count));
+		bridges = bridges.GetRange(0, Mathf.Min(Mathf.FloorToInt(City.bridge_max), bridges.Count));
 
 	var parts = new List.<GameObject>();
 	for(var i=0;i<bridges.Count;i++){
-		var lx = GetCoordinateFromIndex(bridges[i].index, city.width);
-		var lz = GetCoordinateFromIndex(bridges[i].index, city.length);
+		var lx = GetCoordinateFromIndex(bridges[i].index, City.width);
+		var lz = GetCoordinateFromIndex(bridges[i].index, City.length);
 
 		var partsOpts = new MeshOpts();
 		partsOpts.color = CityGenerator.Color.BUILDING;
-		partsOpts.w = (bridges[i].axis == 1) ? city.width : city.road_w;
-		partsOpts.l = (bridges[i].axis == 1) ? city.road_w : city.length;
+		partsOpts.w = (bridges[i].axis == 1) ? City.width : City.road_w;
+		partsOpts.l = (bridges[i].axis == 1) ? City.road_w : City.length;
 		partsOpts.h = 4;
-		partsOpts.y = city.bridge_h+2;
+		partsOpts.y = City.bridge_h+2;
 		partsOpts.x = bridges[i].axis ? 0 : lx;
 		partsOpts.z = bridges[i].axis ? lz : 0;
 		partsOpts.shadow = true;
@@ -117,16 +116,16 @@ function Start () {
 		parts.Add(GetBoxMeshOpts(partsOpts));
 
 		//columns
-		for(var j=0;j<((bridges[i].axis == 1) ? city.blocks_x : city.blocks_z);j++){
-			var h = city.bridge_h+(city.curb_h*2)+(city.water_height);
+		for(var j=0;j<((bridges[i].axis == 1) ? City.blocks_x : City.blocks_z);j++){
+			var h = City.bridge_h+(City.curb_h*2)+(City.water_height);
 
 			partsOpts.color = CityGenerator.Color.BUILDING;
 			partsOpts.w = 10;
 			partsOpts.l = 10;
 			partsOpts.h = h;
-			partsOpts.y = -((city.curb_h*2)+(city.water_height))+(h/2);
-			partsOpts.x = (bridges[i].axis == 1) ? GetCoordinateFromIndex(j, city.width) : lx;
-			partsOpts.z = (bridges[i].axis == 1) ? lz : GetCoordinateFromIndex(j, city.length);
+			partsOpts.y = -((City.curb_h*2)+(City.water_height))+(h/2);
+			partsOpts.x = (bridges[i].axis == 1) ? GetCoordinateFromIndex(j, City.width) : lx;
+			partsOpts.z = (bridges[i].axis == 1) ? lz : GetCoordinateFromIndex(j, City.length);
 
 			parts.Add(GetBoxMeshOpts(partsOpts));
 		}

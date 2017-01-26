@@ -1,6 +1,7 @@
 ﻿#pragma strict
 
 import System.Collections.Generic;
+import CityGenerator;
 
 public class Building
 {
@@ -13,13 +14,11 @@ public class Building
 		var o=options;
 		return meshgen.getBoxMesh(o.color, o.w, o.h, o.l, o.x, o.y, o.z, o.shadow);
 	}
-	
-	private var city: CityConfig;
+
 	private var meshgen: MeshGenerator;
 	private var parts: List.<GameObject>;
 
 	public function Building(opts: BuildingOpts, meshgen: MeshGenerator) {
-		this.city = new CityConfig();
 		this.meshgen = meshgen;
 	
 		this.parts = new List.<GameObject>();
@@ -30,7 +29,7 @@ public class Building
 		var rim_opts: MeshOpts = new MeshOpts();
 		rim_opts.color = opts.color;
 		rim_opts.h = rim;
-		rim_opts.y = opts.h + (rim/2) + city.curb_h;
+		rim_opts.y = opts.h + (rim/2) + City.curb_h;
 		rim_opts.shadow = false;
 
 		var core_opts = new MeshOpts();
@@ -39,7 +38,7 @@ public class Building
 		core_opts.h = opts.h;
 		core_opts.l = opts.l;
 		core_opts.x = opts.x;
-		core_opts.y = (opts.h/2)+city.curb_h;
+		core_opts.y = (opts.h/2)+City.curb_h;
 		core_opts.z = opts.z;
 		core_opts.shadow = true;
 
@@ -90,7 +89,7 @@ public class Building
 			rim_opts.l = 3;
 			rim_opts.x = opts.x - (5*CityGenerator.Random.RandDir());
 			rim_opts.z = opts.z - (5*CityGenerator.Random.RandDir());
-			rim_opts.h = CityGenerator.Random.GetRandInt(city.build_max_h/5, city.build_max_h/3);
+			rim_opts.h = CityGenerator.Random.GetRandInt(City.build_max_h/5, City.build_max_h/3);
 		
 			this.parts.Add(GetBoxMeshOpts(rim_opts));
 		}
